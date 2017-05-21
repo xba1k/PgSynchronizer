@@ -78,14 +78,14 @@ found primary key column a for table table1
 analyzed 2 source rows, 0 destination rows  
 calculated 2 inserts, 0 updates, 0 deletes  
 COPY completed with 2 rows affected  
-performed 2 inserts, 0 updates, 0 deletes  
+performed **2 inserts**, 0 updates, 0 deletes  
 
 Attempting to synchronize table table2 with strategy HASH  
 failed to determine a suitable PK. Resorting to ctid.  
 analyzed 2 source rows, 0 destination rows  
 calculated 2 inserts, 0 updates, 0 deletes  
 COPY completed with 2 rows affected  
-performed 2 inserts, 0 updates, 0 deletes  
+performed **2 inserts**, 0 updates, 0 deletes  
 
 Attempting to synchronize table table3 with strategy HASH  
 table table3 appears to have a composite PK  
@@ -93,7 +93,7 @@ failed to determine a suitable PK. Resorting to ctid.
 analyzed 2 source rows, 0 destination rows  
 calculated 2 inserts, 0 updates, 0 deletes  
 COPY completed with 2 rows affected  
-performed 2 inserts, 0 updates, 0 deletes  
+performed **2 inserts**, 0 updates, 0 deletes  
 
 source_db=# update table1 set b = 'stuff' where a = 2;  
 UPDATE 1  
@@ -105,7 +105,7 @@ Attempting to synchronize table table1 with strategy HASH
 found primary key column a for table table1  
 analyzed 2 source rows, 2 destination rows  
 calculated 0 inserts, 1 updates, 0 deletes  
-performed 0 inserts, 1 updates, 0 deletes  
+performed 0 inserts, **1 updates**, 0 deletes  
 
 Attempting to synchronize table table2 with strategy HASH  
 failed to determine a suitable PK. Resorting to ctid.  
@@ -117,4 +117,4 @@ table table3 appears to have a composite PK
 failed to determine a suitable PK. Resorting to ctid.  
 analyzed 1 source rows, 2 destination rows  
 calculated 0 inserts, 0 updates, 1 deletes  
-performed 0 inserts, 0 updates, 1 deletes  
+performed 0 inserts, 0 updates, **1 deletes**  
