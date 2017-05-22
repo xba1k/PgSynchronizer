@@ -7,13 +7,13 @@ CND_BASEDIR=`pwd`
 CND_BUILDDIR=build
 CND_DISTDIR=dist
 # Debug configuration
-CND_PLATFORM_Debug=GNU-MacOSX
-CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-MacOSX
+CND_PLATFORM_Debug=GNU-Linux
+CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux
 CND_ARTIFACT_NAME_Debug=pgsynchronizer
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-MacOSX/pgsynchronizer
-CND_PACKAGE_DIR_Debug=dist/Debug/GNU-MacOSX/package
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux/pgsynchronizer
+CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux/package
 CND_PACKAGE_NAME_Debug=pgsynchronizer.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-MacOSX/package/pgsynchronizer.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/pgsynchronizer.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux

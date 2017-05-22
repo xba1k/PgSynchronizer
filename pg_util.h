@@ -2,7 +2,7 @@
 #define PG_H
 
 #ifdef __linux__
-#include <postgres/libpq-fe.h>
+#include <libpq-fe.h>
 #elif __APPLE__
 #include <libpq-fe.h>
 #endif

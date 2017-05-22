@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=GNU-MacOSX
+CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=dylib
 CND_CONF=Debug
 CND_DISTDIR=dist
@@ -56,7 +56,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L/opt/local/lib/postgresql95
+LDLIBSOPTIONS=-L`pg_config --libdir`
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -69,27 +69,27 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/pgsynchronizer: ${OBJECTFILES}
 ${OBJECTDIR}/config_util.o: config_util.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -I/opt/local/include/postgresql95 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/config_util.o config_util.c
+	$(COMPILE.c) -g -I`pg_config --includedir` -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/config_util.o config_util.c
 
 ${OBJECTDIR}/list.o: list.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -I/opt/local/include/postgresql95 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/list.o list.c
+	$(COMPILE.c) -g -I`pg_config --includedir` -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/list.o list.c
 
 ${OBJECTDIR}/main.o: main.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -I/opt/local/include/postgresql95 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+	$(COMPILE.c) -g -I`pg_config --includedir` -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
 
 ${OBJECTDIR}/pg_util.o: pg_util.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -I/opt/local/include/postgresql95 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pg_util.o pg_util.c
+	$(COMPILE.c) -g -I`pg_config --includedir` -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pg_util.o pg_util.c
 
 ${OBJECTDIR}/sync_util.o: sync_util.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.c) -g -I/opt/local/include/postgresql95 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sync_util.o sync_util.c
+	$(COMPILE.c) -g -I`pg_config --includedir` -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/sync_util.o sync_util.c
 
 # Subprojects
 .build-subprojects:
