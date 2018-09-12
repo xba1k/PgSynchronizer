@@ -887,7 +887,7 @@ char *determine_pk(PGconn *conn, char *tablename) {
     char *query = NULL;
     ResultSet *rset = NULL;
     char *result = NULL;
-    asprintf(&query, "select attname from pg_class a join pg_constraint b on a.oid = b.conrelid join pg_attribute c on a.oid = c.attrelid and conkey @> array[c.attnum] where contype = 'p' and relname = '%s'", tablename);
+    asprintf(&query, "select attname from pg_class a join pg_constraint b on a.oid = b.conrelid join pg_attribute c on a.oid = c.attrelid and conkey @> array[c.attnum] join pg_catalog.pg_stat_user_tables d ON (d.relid = a.oid) where contype = 'p' and (d.schemaname||'.'||a.relname) = '%s'", tablename);
     
     rset = pg_query(conn, query);
     
