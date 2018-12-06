@@ -118,8 +118,14 @@ void pg_exec(PGconn *conn, char *query) {
     
 }
 
-int pg_begin_copy(PGconn *conn, char *tablename) {
+int pg_begin_copy(PGconn *conn, char *tablename, PGconn *src_conn) {
     
+    int c;
+    char *colnames = NULL;
+    char *query_cols = NULL;
+    char *tmp = NULL;
+    ResultSet *rset = NULL;
+
     PGresult *res = NULL;
     char *query = NULL;
     int result = 0;
@@ -127,9 +133,25 @@ int pg_begin_copy(PGconn *conn, char *tablename) {
     char *header = "PGCOPY\n\377\r\n\0\0\0\0\0\0\0\0\0";
     
     if(conn) {
+
+        asprintf(&query_cols, "SELECT * FROM %s LIMIT 1", tablename);
+        rset= pg_query(src_conn, query_cols);
+
+        if(rset) {
+
+            for(c = 0; c < rset->numFields; c++) {
+                
+                asprintf(&tmp, "%s%s%s", colnames!=NULL ? colnames : "", colnames!=NULL ? "," : "",  rset->colNames[c]);
+                free(colnames);
+                colnames = tmp;
+                tmp = NULL;                
+            }            
+        }
+
         
-        asprintf(&query, "COPY %s FROM STDIN WITH BINARY", tablename);
-        
+        asprintf(&query, "COPY %s (%s) FROM STDIN WITH BINARY", tablename, colnames);
+        free(colnames);
+
         res = PQexec(conn, query);
         
         if (PQresultStatus(res) != PGRES_COPY_IN) {

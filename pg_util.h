@@ -42,7 +42,7 @@ void pg_begin(PGconn *conn);
 void pg_end(PGconn *conn);
 void pg_unprepare(PGconn *conn, char *stmt_name);
 void pg_exec(PGconn *conn, char *query);
-int pg_begin_copy(PGconn *conn, char *tablename);
+int pg_begin_copy(PGconn *conn, char *tablename, PGconn *src_conn);
 int pg_send_copy_data(PGconn *conn, ResultSet *rset);
 int pg_finish_copy(PGconn *conn);
 
