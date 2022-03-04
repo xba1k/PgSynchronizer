@@ -9,6 +9,23 @@
 
 #include "sync_util.h"
 
+char *replace_str(char *str, char *src_str, char *dst_str)
+{
+    static char new_str[4096];
+    char *aux;
+
+    if(!(aux = strstr(str, src_str)))
+    return str;
+
+    strncpy(new_str, str, aux-str);
+    new_str[aux-str] = '\0';
+
+    sprintf(new_str+(aux-str), "%s%s", dst_str, aux+strlen(src_str));
+
+    return new_str;
+}
+
+
 ResultSet *get_pk_max(PGconn *conn, char *tablename, char *pkcol) {
 
     char *query = NULL;
@@ -538,10 +555,10 @@ void perform_changes_with_pk(PGconn *src_conn, PGconn *dst_conn, char *src_table
     char delete_rows[200];
     char insert_rows[200];
     
-    sprintf(select_rows, "select_rows_%s", src_table);
-    sprintf(update_rows, "update_rows_%s", src_table);
-    sprintf(delete_rows, "delete_rows_%s", src_table);
-    sprintf(insert_rows, "insert_rows_%s", src_table);
+    sprintf(select_rows, "select_rows_%s", replace_str(src_table, ".", "_"));
+    sprintf(update_rows, "update_rows_%s", replace_str(src_table, ".", "_"));
+    sprintf(delete_rows, "delete_rows_%s", replace_str(src_table, ".", "_"));
+    sprintf(insert_rows, "insert_rows_%s", replace_str(src_table, ".", "_"));
     
     PGresult *select_stmt = prepare_select_with_pk_range(src_conn, select_rows, src_table, pkcol);
     PGresult *delete_stmt = NULL;
@@ -628,13 +645,13 @@ void perform_changes_with_pk(PGconn *src_conn, PGconn *dst_conn, char *src_table
         }
         
         if(inserts->count > 0) {
-            if(!pg_begin_copy(dst_conn, dst_table)) {
+            if(!pg_begin_copy(dst_conn, dst_table, src_conn)) {
                 printf("couldn't initiate COPY %s\n", dst_table);
             }
         }
         
         for(item = list_first(inserts); item != NULL; item = list_next(item)) {
-            
+
             if(pk_range_start == 0)
                 pk_range_start = (long)item->data;
             if(pk_range_end == 0)
@@ -657,7 +674,7 @@ void perform_changes_with_pk(PGconn *src_conn, PGconn *dst_conn, char *src_table
             
             if(select_rset)
             
-            while((data = pg_next(select_rset))) {
+            while((data = pg_next(select_rset))) {                
                 inserted += pg_send_copy_data(dst_conn, select_rset);
             } 
             
@@ -686,7 +703,7 @@ void perform_changes_with_pk(PGconn *src_conn, PGconn *dst_conn, char *src_table
         
     }
     
-    printf("performed %u inserts, %u updates, %u deletes\n", inserted, updated, deleted);
+    printf("performed::pk %u inserts, %u updates, %u deletes\n", inserted, updated, deleted);
     
 }
 
@@ -704,8 +721,8 @@ void perform_changes_with_max(PGconn *src_conn, PGconn *dst_conn, char *src_tabl
     char insert_rows[200];
     char delete_rows[200];
     
-    sprintf(select_rows, "select_rows_%s", src_table);
-    sprintf(delete_rows, "delete_rows_%s", src_table);
+    sprintf(select_rows, "select_rows_%s", replace_str(src_table, ".", "_"));
+    sprintf(delete_rows, "delete_rows_%s", replace_str(src_table, ".", "_"));
     
     if(src_max_val > dst_max_val) {
     
@@ -713,7 +730,7 @@ void perform_changes_with_max(PGconn *src_conn, PGconn *dst_conn, char *src_tabl
         
         if(select_stmt) {
             
-            if(!pg_begin_copy(dst_conn, dst_table)) {
+            if(!pg_begin_copy(dst_conn, dst_table, src_conn)) {
                 printf("couldn't initiate COPY %s\n", dst_table);
             }
 
@@ -736,7 +753,7 @@ void perform_changes_with_max(PGconn *src_conn, PGconn *dst_conn, char *src_tabl
         
         }
     
-        printf("performed %u inserts\n", inserted);
+        printf("performed::max %u inserts\n", inserted);
     
     } else {
         
@@ -753,7 +770,7 @@ void perform_changes_with_max(PGconn *src_conn, PGconn *dst_conn, char *src_tabl
             
         }
         
-        printf("performed %u deletes\n", deleted);
+        printf("performed::max %u deletes\n", deleted);
         
         PQclear(delete_stmt);
         
@@ -776,10 +793,10 @@ void perform_changes_with_ctid(PGconn *src_conn, PGconn *dst_conn, char *src_tab
     char delete_rows[200];
     char insert_rows[200];
     
-    sprintf(select_rows, "select_rows_%s", src_table);
-    sprintf(update_rows, "update_rows_%s", src_table);
-    sprintf(delete_rows, "delete_rows_%s", src_table);
-    sprintf(insert_rows, "insert_rows_%s", src_table);
+    sprintf(select_rows, "select_rows_%s", replace_str(src_table, ".", "_"));
+    sprintf(update_rows, "update_rows_%s", replace_str(src_table, ".", "_"));
+    sprintf(delete_rows, "delete_rows_%s", replace_str(src_table, ".", "_"));
+    sprintf(insert_rows, "insert_rows_%s", replace_str(src_table, ".", "_"));
     
     PGresult *select_stmt = prepare_select_with_ctid(src_conn, select_rows, src_table);
     PGresult *delete_stmt = NULL;
@@ -846,7 +863,7 @@ void perform_changes_with_ctid(PGconn *src_conn, PGconn *dst_conn, char *src_tab
         }
         
         if(inserts->count > 0) {
-            if(!pg_begin_copy(dst_conn, dst_table)) {
+            if(!pg_begin_copy(dst_conn, dst_table, src_conn)) {
                 printf("couldn't initiate COPY %s\n", dst_table);
             }
         }
@@ -878,7 +895,7 @@ void perform_changes_with_ctid(PGconn *src_conn, PGconn *dst_conn, char *src_tab
         
     }
     
-    printf("performed %u inserts, %u updates, %u deletes\n", inserted, updated, deleted);
+    printf("performed::ctid %u inserts, %u updates, %u deletes\n", inserted, updated, deleted);
     
 }
 
